@@ -12,6 +12,7 @@ async def on_ready():
     
     await bot.change_presence(activity=discord.Game(
         name="On reddit :3 | ~sub")) 
+    
     print(f"Logged in on {len(bot.guilds)} servers")
 
 
@@ -20,6 +21,7 @@ async def on_message(msg):
 
     if msg.author == bot.user:
         return
+    
     if msg.author.bot:
         return
     
@@ -37,15 +39,18 @@ async def sub(ctx, sub = None):
         owner = discord.utils.get(bot.users, id=357641367507435531)
         
         embed = discord.Embed(color=color)
+        
         embed.add_field(name="R3dd1t", value="Thanks for inviting Reddit Bot to your server!\n"
                                              "This bot essentially gets images from any subreddit you specify.\n"
                                              "Try `~sub hamsters` or `~sub JoyconBoyz`."
                         )
         
         embed.add_field(name="Author", value=f"This bot was created by {owner.mention} in discord.py.")
+        
         embed.add_field(name="Bot invite:", value=f"https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
                                                    "&scope=bot&permissions=18432"
                         )
+        
         embed.add_field(name="Embed Errors", value="If the link isn't an image, it will drop the embed and just post the link.\n"
                               "(Blame reddit API for this :c)"
                         )
@@ -63,6 +68,7 @@ async def sub(ctx, sub = None):
             if data[0]["data"]["children"][0]["data"]["is_self"] == False:
                 
                 image = data[0]["data"]["children"][0]["data"]["url"]
+                
                 embed = discord.Embed(
                     title=data[0]["data"]["children"][0]["data"]["subreddit"],
                     color=color
@@ -73,7 +79,7 @@ async def sub(ctx, sub = None):
                 await ctx.send(embed=embed)
                 
             else:
-
+                # if reddit api still gives a text post i'll just post it
                 link = data[0]["data"]["children"][0]["data"]["url"]
                 
                 await ctx.send(link)
