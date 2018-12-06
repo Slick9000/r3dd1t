@@ -33,6 +33,7 @@ def find_nsfw(channels):
         if type(channel) == discord.TextChannel and channel.is_nsfw():
             return channel
 
+        
 @bot.command()
 async def sub(ctx, sub = None):
     """The reddit command."""
@@ -45,7 +46,7 @@ async def sub(ctx, sub = None):
         
             embed = discord.Embed(color=color)
         
-            embed.add_field(name="R3dd1t", value="Thanks for inviting Reddit Bot to your server!\n"
+            embed.add_field(name="R3dd1t", value="Thanks for inviting R3dd1t to your server!\n"
                                                  "This bot essentially gets images from any subreddit you specify.\n"
                                                  "Try `~sub hamsters` or `~sub JoyconBoyz`."
                            )
@@ -59,6 +60,10 @@ async def sub(ctx, sub = None):
             embed.add_field(name="Embed Errors", value="If the link isn't an image, it will drop the embed and just post the link.\n"
                                  "(Blame reddit API for this :c)"
                            )
+            
+            embed.add_field(name="NSFW Content Checks", value="There's no need to worry about NSFW content, ever.\n"
+                                                              "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
+                                                              "If no NSFW channel exists, it simply doesn't post it. Lovely."
         
             embed.set_image(url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png")
         
@@ -82,20 +87,31 @@ async def sub(ctx, sub = None):
                         embed.set_image(url=image)
 
                         if ctx.channel.is_nsfw() == True:
+                            await ctx.send(embed=embed)
+
+                    else:
+                        
+                        channel = find_nsfw(ctx.guild.channels)
+
+                        if channel == None:
+
+                            embed = discord.Embed(color=color)
+                            embed.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
+                                                                       "and no NSFW channel exists on this server.\n"
+                                                                       "Therefore, no content was posted as a precaution."
+                                            )
 
                             await ctx.send(embed=embed)
 
                         else:
-                        
-                            channel = find_nsfw(ctx.guild.channels)
 
                             await channel.send(embed=embed)
 
                             info = discord.Embed(color=color)
-                            info.add_field(name="NSFW Content", value="The content from this subreddit happens to be nsfw content, "
-                                                                      "and this command wasn't used in an nsfw channel.\n"
-                                                                      f"However we posted it to {channel.mention}, an nsfw channel."
-                                          )
+                            info.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
+                                                                      "and this command wasn't used in an NSFW channel.\n"
+                                                                      f"However we posted it to {channel.mention}, an NSFW channel."
+                                           )
                         
                             info.set_footer(text="Now can I have my coffee back? :3")
                         
@@ -119,7 +135,7 @@ async def sub(ctx, sub = None):
                     # if reddit api still gives a text post just post the link
                     link = data[0]["data"]["children"][0]["data"]["url"]
                 
-                    await ctx.send(link)           
+                    await ctx.send(link)       
 
     except KeyError:
             # subreddit unfound
