@@ -64,7 +64,7 @@ async def sub(ctx, sub = None):
             embed.add_field(name="NSFW Content Checks", value="There's no need to worry about NSFW content, ever.\n"
                                                               "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
                                                               "If no NSFW channel exists, it simply doesn't post it. Lovely."
-                           )
+                            )
         
             embed.set_image(url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png")
         
@@ -90,33 +90,33 @@ async def sub(ctx, sub = None):
                         if ctx.channel.is_nsfw() == True:
                             await ctx.send(embed=embed)
 
-                    else:
-                        
-                        channel = find_nsfw(ctx.guild.channels)
-
-                        if channel == None:
-
-                            embed = discord.Embed(color=color)
-                            embed.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
-                                                                       "and no NSFW channel exists on this server.\n"
-                                                                       "Therefore, no content was posted as a precaution."
-                                            )
-
-                            await ctx.send(embed=embed)
-
                         else:
-
-                            await channel.send(embed=embed)
-
-                            info = discord.Embed(color=color)
-                            info.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
-                                                                      "and this command wasn't used in an NSFW channel.\n"
-                                                                      f"However we posted it to {channel.mention}, an NSFW channel."
-                                           )
                         
-                            info.set_footer(text="Now can I have my coffee back? :3")
+                            channel = find_nsfw(ctx.guild.channels)
+
+                            if channel == None:
+
+                                embed = discord.Embed(color=color)
+                                embed.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
+                                                                           "and no NSFW channel exists on this server.\n"
+                                                                           "Therefore, no content was posted as a precaution."
+                                                )
+
+                                await ctx.send(embed=embed)
+
+                            else:
+
+                                await channel.send(embed=embed)
+
+                                info = discord.Embed(color=color)
+                                info.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
+                                                                          "and this command wasn't used in an NSFW channel.\n"
+                                                                          f"However we posted it to {channel.mention}, an NSFW channel."
+                                               )
                         
-                            await ctx.send(embed=info)
+                                info.set_footer(text="Now can I have my coffee back? :3")
+                        
+                                await ctx.send(embed=info)
                         
 
                 # is_self checks if it's a text post, which is what we don't want
