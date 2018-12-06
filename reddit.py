@@ -11,7 +11,7 @@ bot.remove_command("help")
 async def on_ready():
     
     await bot.change_presence(activity=discord.Game(
-        name="On reddit :3 | ~sub")) 
+        name="on reddit :3 | ~sub")) 
     
     print(f"Logged in on {len(bot.guilds)} servers")
 
@@ -26,7 +26,8 @@ async def on_message(msg):
         return
     
     await bot.process_commands(msg)
-    
+
+# def for finding an nsfw channel
 def find_nsfw(channels):
     for channel in channels:
         if type(channel) == discord.TextChannel and channel.is_nsfw():
@@ -67,36 +68,38 @@ async def sub(ctx, sub = None):
         async with aiohttp.ClientSession() as cs:
             async with cs.get(f"https://api.reddit.com/r/{sub}/random") as r:
                 data = await r.json()
-
+                
+                # handling all the nsfw content
                 if data[0]["data"]["children"][0]["data"]["over_18"]:
-
-                    image = data[0]["data"]["children"][0]["data"]["url"]
-                    embed = discord.Embed(
-                        title=data[0]["data"]["children"][0]["data"]["subreddit"],
-                        color=color
-                        )
-
-                    embed.set_image(url=image)
-
-                    if ctx.channel.is_nsfw == True:
-
-                        await ctx.send(embed=embed)
-
-                    else:
+                    if data[0]["data"]["children"][0]["data"]["is_self"] == False:
                         
-                        channel = find_nsfw(ctx.guild.channels)
+                        image = data[0]["data"]["children"][0]["data"]["url"]
+                        embed = discord.Embed(
+                            title=data[0]["data"]["children"][0]["data"]["subreddit"],
+                            color=color
+                            )
 
-                        await channel.send(embed=embed)
+                        embed.set_image(url=image)
 
-                        info = discord.Embed(color=color)
-                        info.add_field(name="NSFW Content", value="The content from this subreddit happens to be nsfw content, "
-                                                                   "and this command wasn't used in an nsfw channel.\n"
-                                                                   f"However we posted it to {channel.mention}, an nsfw channel."
-                                        )
+                        if ctx.channel.is_nsfw == True:
+
+                            await ctx.send(embed=embed)
+
+                        else:
                         
-                        info.set_footer(text="Now can I have my coffee back? :3")
+                            channel = find_nsfw(ctx.guild.channels)
+
+                            await channel.send(embed=embed)
+
+                            info = discord.Embed(color=color)
+                            info.add_field(name="NSFW Content", value="The content from this subreddit happens to be nsfw content, "
+                                                                      "and this command wasn't used in an nsfw channel.\n"
+                                                                      f"However we posted it to {channel.mention}, an nsfw channel."
+                                          )
                         
-                        await ctx.send(embed=info)
+                            info.set_footer(text="Now can I have my coffee back? :3")
+                        
+                            await ctx.send(embed=info)
                         
 
                 # is_self checks if it's a text post, which is what we don't want
