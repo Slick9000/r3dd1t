@@ -72,7 +72,7 @@ async def sub(ctx, sub = None):
                                                               "If no NSFW channel exists, it simply doesn't post it. Lovely."
                             )
 
-            embed.set_image(url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png")
+            embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png")
 
             await ctx.send(embed=embed)
             return
