@@ -111,18 +111,6 @@ async def sub(ctx, sub = None):
                     embed.set_image(url=image)
 
                     await ctx.send(embed=embed)
-
-                else:
-
-                    link = data[0]["data"]["children"][0]["data"]["url"]
-
-                    await ctx.send(link)
-
-                else:
-
-                    link = data[0]["data"]["children"][0]["data"]["url"]
-
-                    await ctx.send(link)
                 
                 else:
                     # if reddit api still gives a text post just post the link
