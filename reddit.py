@@ -48,7 +48,7 @@ async def sub(ctx, sub = None):
         
             embed.add_field(name="R3dd1t", value="Thanks for inviting R3dd1t to your server!\n"
                                                  "This bot essentially gets images from any subreddit you specify.\n"
-                                                 "Try `~sub hamsters` or `~sub JoyconBoyz`."
+                                                 "Try `~sub hamsters` or `~sub ProgrammerHumor`."
                            )
         
             embed.add_field(name="Author", value=f"This bot was created by {owner.mention} in discord.py.")
