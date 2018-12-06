@@ -26,7 +26,11 @@ async def on_message(msg):
         return
     
     await bot.process_commands(msg)
-
+    
+def find_nsfw(channels):
+    for channel in channels:
+        if type(channel) == discord.TextChannel and channel.is_nsfw():
+            return channel
 
 @bot.command()
 async def sub(ctx, sub = None):
@@ -64,19 +68,61 @@ async def sub(ctx, sub = None):
             async with cs.get(f"https://api.reddit.com/r/{sub}/random") as r:
                 data = await r.json()
 
-                # is_self checks if it's a text post, which is what we don't want
-                if data[0]["data"]["children"][0]["data"]["is_self"] == False:
-                
+                if data[0]["data"]["children"][0]["data"]["over_18"]:
+
                     image = data[0]["data"]["children"][0]["data"]["url"]
-                
                     embed = discord.Embed(
                         title=data[0]["data"]["children"][0]["data"]["subreddit"],
                         color=color
                         )
-                
+
                     embed.set_image(url=image)
-                
+
+                    if ctx.channel.is_nsfw == True:
+
+                        await ctx.send(embed=embed)
+
+                    else:
+                        
+                        channel = find_nsfw(ctx.guild.channels)
+
+                        await channel.send(embed=embed)
+
+                        info = discord.Embed(color=color)
+                        info.add_field(name="NSFW Content", value="The content from this subreddit happens to be nsfw content, "
+                                                                   "and this command wasn't used in an nsfw channel.\n"
+                                                                   f"However we posted it to {channel.mention}, an nsfw channel."
+                                        )
+                        
+                        info.set_footer(text="Now can I have my coffee back? :3")
+                        
+                        await ctx.send(embed=info)
+                        
+
+                # is_self checks if it's a text post, which is what we don't want
+                elif data[0]["data"]["children"][0]["data"]["is_self"] == False:
+
+                    image = data[0]["data"]["children"][0]["data"]["url"]
+                    embed = discord.Embed(
+                        title=data[0]["data"]["children"][0]["data"]["subreddit"],
+                        color=color
+                        )
+
+                    embed.set_image(url=image)
+
                     await ctx.send(embed=embed)
+
+                else:
+
+                    link = data[0]["data"]["children"][0]["data"]["url"]
+
+                    await ctx.send(link)
+
+                else:
+
+                    link = data[0]["data"]["children"][0]["data"]["url"]
+
+                    await ctx.send(link)
                 
                 else:
                     # if reddit api still gives a text post just post the link
