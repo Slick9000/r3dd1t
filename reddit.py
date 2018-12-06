@@ -81,7 +81,7 @@ async def sub(ctx, sub = None):
 
                         embed.set_image(url=image)
 
-                        if ctx.channel.is_nsfw == True:
+                        if ctx.channel.is_nsfw() == True:
 
                             await ctx.send(embed=embed)
 
