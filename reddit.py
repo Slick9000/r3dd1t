@@ -97,18 +97,18 @@ async def sub(ctx, sub = None):
 
                         embed.set_image(url=image)
 
-                        if ctx.channel.is_nsfw() == True:
-
-                            await ctx.send(embed=embed)
-                            
-                        else:
-                            
-                            if type(ctx.channel) == discord.PrivateChannel:
+                        if type(ctx.channel) == discord.DMChannel:
                             
                                 embed.set_footer(text="NSFW checks do not apply to private channels.")
                                              
                                 await ctx.send(embed=embed)
-                                
+
+                        else:
+
+                            if ctx.channel.is_nsfw() == True:
+
+                                await ctx.send(embed=embed)
+                            
                             else:
 
                                 channel = find_nsfw(ctx.guild.channels)
@@ -120,7 +120,7 @@ async def sub(ctx, sub = None):
                                     embed.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
                                                                                "and no NSFW channel exists on this server.\n"
                                                                                "Therefore, no content was posted as a precaution."
-                                                    )
+                                                   )
 
                                     await ctx.send(embed=embed)
 
@@ -133,7 +133,7 @@ async def sub(ctx, sub = None):
                                     info.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
                                                                               "and this command wasn't used in an NSFW channel.\n"
                                                                               f"However we posted it to {channel.mention}, an NSFW channel."
-                                                   )
+                                                  )
 
                                     info.set_footer(text="Now can I have my coffee back? :3")
 
@@ -169,7 +169,6 @@ async def sub(ctx, sub = None):
             embed.add_field(name="Subreddit Error", value="Subreddit was not found.")
 
             await ctx.send(embed=embed)
-
 
             
 bot.run(os.environ['TOKEN'])
