@@ -101,7 +101,7 @@ async def sub(ctx, sub = None):
 
                             await ctx.send(embed=embed)
 
-                        elif discord.ChannelType.private:
+                        elif type(ctx.channel) == discord.PrivateChannel:
                             
                             embed.set_footer(text="NSFW checks do not apply to private channels.")
                                              
