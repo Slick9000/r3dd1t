@@ -59,7 +59,7 @@ async def sub(ctx, sub = None):
 
             embed.add_field(name="Author", value=f"This bot was created by {owner.mention} in discord.py.")
 
-            embed.add_field(name="Bot invite:", value=f"https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
+            embed.add_field(name="Bot Invite:", value=f"https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
                                                        "&scope=bot&permissions=18432"
                            )
 
@@ -89,6 +89,7 @@ async def sub(ctx, sub = None):
                     if data[0]["data"]["children"][0]["data"]["is_self"] == False:
 
                         image = data[0]["data"]["children"][0]["data"]["url"]
+                        
                         embed = discord.Embed(
                             title=data[0]["data"]["children"][0]["data"]["subreddit"],
                             color=color
@@ -100,6 +101,12 @@ async def sub(ctx, sub = None):
 
                             await ctx.send(embed=embed)
 
+                        elif discord.ChannelType.private:
+                            
+                            embed.set_footer(text="NSFW checks do not apply to private channels.")
+                                             
+                            await ctx.send(embed=embed)
+                            
                         else:
 
                             channel = find_nsfw(ctx.guild.channels)
@@ -135,6 +142,7 @@ async def sub(ctx, sub = None):
                 elif data[0]["data"]["children"][0]["data"]["is_self"] == False:
 
                     image = data[0]["data"]["children"][0]["data"]["url"]
+                    
                     embed = discord.Embed(
                         title=data[0]["data"]["children"][0]["data"]["subreddit"],
                         color=color
