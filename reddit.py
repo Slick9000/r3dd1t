@@ -69,7 +69,8 @@ async def sub(ctx, sub = None):
 
             embed.add_field(name="NSFW Content Checks", value="There's no need to worry about NSFW content, ever.\n"
                                                               "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
-                                                              "If no NSFW channel exists, it simply doesn't post it. Lovely."
+                                                              "If no NSFW channel exists, it simply doesn't post it. Lovely.\n"
+                                                              "**Note:** This does not apply to DM channels, in that case it will post."
                             )
 
             embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png")
