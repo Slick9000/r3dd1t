@@ -106,7 +106,7 @@ async def sub(ctx, sub=None):
 
                         text = f"Content is too large...\n{full_post}"
 
-                        embed.add_field(name="Content:", value=text, inline=False)
+                    embed.add_field(name="Content:", value=text, inline=False)
 
                 if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
 
