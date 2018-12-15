@@ -10,8 +10,7 @@ bot.remove_command("help")
 @bot.event
 async def on_ready():
 
-    await bot.change_presence(activity=discord.Game(
-        name="on reddit :3 | ~sub"))
+    await bot.change_presence(activity=discord.Game(name="on reddit :3 | ~sub"))
 
     print(f"Logged in on {len(bot.guilds)} servers")
 
@@ -29,6 +28,7 @@ async def on_message(msg):
 
     await bot.process_commands(msg)
 
+
 # def for finding an nsfw channel
 def find_nsfw(channels):
     for channel in channels:
@@ -39,41 +39,48 @@ def find_nsfw(channels):
 
 
 @bot.command()
-async def sub(ctx, sub = None):
+async def sub(ctx, sub=None):
     """The reddit command."""
 
     try:
 
-        color = 0xff4500
+        color = 0xFF4500
 
         if sub == None:
 
-            owner = discord.utils.get(bot.users, id=357641367507435531)
+            owner = discord.utils.get(bot.users, id=357_641_367_507_435_531)
 
             embed = discord.Embed(color=color)
 
-            embed.add_field(name="R3dd1t", value="Thanks for inviting R3dd1t to your server!\n"
-                                                 "This bot essentially gets images from any subreddit you specify.\n"
-                                                 "Try `~sub hamsters` or `~sub ProgrammerHumor`."
-                           )
+            embed.add_field(
+                name="R3dd1t",
+                value="Thanks for inviting R3dd1t to your server!\n"
+                "This bot essentially gets images from any subreddit you specify.\n"
+                "Try `~sub hamsters` or `~sub ProgrammerHumor`.",
+            )
 
-            embed.add_field(name="Author", value=f"This bot was created by {owner.mention} in discord.py.")
+            embed.add_field(
+                name="Author",
+                value=f"This bot was created by {owner.mention} in discord.py.",
+            )
 
-            embed.add_field(name="Bot Invite:", value=f"https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
-                                                       "&scope=bot&permissions=18432"
-                           )
+            embed.add_field(
+                name="Bot Invite:",
+                value=f"https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
+                "&scope=bot&permissions=18432",
+            )
 
-            embed.add_field(name="Embed Errors", value="If the link isn't an image, it will drop the embed and just post the link.\n"
-                                 "(Blame reddit API for this :c)"
-                           )
+            embed.add_field(
+                name="NSFW Content Checks",
+                value="There's no need to worry about NSFW content, ever.\n"
+                "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
+                "If no NSFW channel exists, it simply doesn't post it. Lovely.\n"
+                "**Note:** This does not apply to DM channels, in that case it will post.",
+            )
 
-            embed.add_field(name="NSFW Content Checks", value="There's no need to worry about NSFW content, ever.\n"
-                                                              "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
-                                                              "If no NSFW channel exists, it simply doesn't post it. Lovely.\n"
-                                                              "**Note:** This does not apply to DM channels, in that case it will post."
-                            )
-
-            embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png")
+            embed.set_thumbnail(
+                url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png"
+            )
 
             await ctx.send(embed=embed)
             return
@@ -84,92 +91,98 @@ async def sub(ctx, sub = None):
 
                 data = await r.json()
 
-                # handling all the nsfw content
-                if data[0]["data"]["children"][0]["data"]["over_18"]:
+                try:
 
-                    if data[0]["data"]["children"][0]["data"]["is_self"] == False:
+                    url = data[0]["data"]["children"][0]["data"]["url"]
+                    name = data[0]["data"]["children"][0]["data"]["subreddit"]
+                    post = data[0]["data"]["children"][0]["data"]["permalink"]
+                    text = data[0]["data"]["children"][0]["data"]["selftext"]
+                    nsfw = data[0]["data"]["children"][0]["data"]["over_18"]
+                    full_post = f"https://www.reddit.com{post}"
 
-                        image = data[0]["data"]["children"][0]["data"]["url"]
-                        
-                        embed = discord.Embed(
-                            title=data[0]["data"]["children"][0]["data"]["subreddit"],
-                            color=color
+                    embed = discord.Embed(title=name, url=full_post, color=color)
+
+                    if text != "":
+
+                        if len(text) > 1024:
+
+                            text = f"Content is too large...\n{full_post}"
+
+                            embed.add_field(name="Content:", value=text, inline=False)
+
+                    if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
+
+                        embed.set_image(url=url)
+
+                    if url.startswith("https://imgur.com"):
+
+                        url = data[0]["data"]["children"][0]["data"]["media"]["oembed"][
+                            "thumbnail_url"
+                        ]
+
+                        embed.set_image(url=url)
+
+                    if nsfw == False:
+
+                        await ctx.send(embed=embed)
+
+                    elif nsfw == True and ctx.channel.is_nsfw():
+
+                        await ctx.send(embed=embed)
+
+                    else:
+
+                        channel = find_nsfw(ctx.guild.channels)
+
+                        if channel == None:
+
+                            embed = discord.Embed(color=color)
+
+                            embed.add_field(
+                                name="NSFW Content",
+                                value="The content from this subreddit happens to be NSFW content, "
+                                "and no NSFW channel exists on this server.\n"
+                                "Therefore, no content was posted as a precaution.",
                             )
 
-                        embed.set_image(url=image)
-
-                        if type(ctx.channel) == discord.DMChannel:
-                            
-                                embed.set_footer(text="NSFW checks do not apply to private channels.")
-                                             
-                                await ctx.send(embed=embed)
+                            await ctx.send(embed=embed)
 
                         else:
 
-                            if ctx.channel.is_nsfw() == True:
+                            await channel.send(embed=embed)
 
-                                await ctx.send(embed=embed)
-                            
-                            else:
+                            info = discord.Embed(color=color)
 
-                                channel = find_nsfw(ctx.guild.channels)
+                            info.add_field(
+                                name="NSFW Content",
+                                value="The content from this subreddit happens to be NSFW content, "
+                                "and this command wasn't used in an NSFW channel.\n"
+                                f"However we posted it to {channel.mention}, an NSFW channel.",
+                            )
 
-                                if channel == None:
+                            info.set_footer(text="Now can I have my coffee back? :3")
 
-                                    embed = discord.Embed(color=color)
+                            await ctx.send(embed=info)
 
-                                    embed.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
-                                                                               "and no NSFW channel exists on this server.\n"
-                                                                               "Therefore, no content was posted as a precaution."
-                                                   )
+                except:
 
-                                    await ctx.send(embed=embed)
+                    error = discord.Embed(color=color)
 
-                                else:
+                    error.add_field(
+                        name="Connection Error",
+                        value="Connection could not be established.\n"
+                        "Host refused to connect."
+                    )
 
-                                    await channel.send(embed=embed)
-
-                                    info = discord.Embed(color=color)
-
-                                    info.add_field(name="NSFW Content", value="The content from this subreddit happens to be NSFW content, "
-                                                                              "and this command wasn't used in an NSFW channel.\n"
-                                                                              f"However we posted it to {channel.mention}, an NSFW channel."
-                                                  )
-
-                                    info.set_footer(text="Now can I have my coffee back? :3")
-
-                                    await ctx.send(embed=info)
-
-
-                # is_self checks if it's a text post, which is what we don't want
-                elif data[0]["data"]["children"][0]["data"]["is_self"] == False:
-
-                    image = data[0]["data"]["children"][0]["data"]["url"]
-                    
-                    embed = discord.Embed(
-                        title=data[0]["data"]["children"][0]["data"]["subreddit"],
-                        color=color
-                        )
-
-                    embed.set_image(url=image)
-
-                    await ctx.send(embed=embed)
-
-                else:
-
-                    # if reddit api still gives a text post just post the link
-                    link = data[0]["data"]["children"][0]["data"]["url"]
-
-                    await ctx.send(link)
+                    await ctx.send(embed=error)
 
     except KeyError:
 
-            # subreddit unfound
-            embed = discord.Embed(color=color)
+        error = discord.Embed(color=color)
 
-            embed.add_field(name="Subreddit Error", value="Subreddit was not found.")
+        error.add_field(name="Subreddit Error", value="Subreddit was not found.")
 
-            await ctx.send(embed=embed)
+        await ctx.send(embed=error)
 
             
 bot.run(os.environ['TOKEN'])
