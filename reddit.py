@@ -100,6 +100,8 @@ async def sub(ctx, sub=None):
 
                 embed = discord.Embed(title=name, url=full_post, color=color)
 
+                embed.add_field(name="Title:", value=title, inline=False)
+
                 if text != "":
 
                     if len(text) > 1024:
