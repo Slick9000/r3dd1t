@@ -122,8 +122,14 @@ async def sub(ctx, sub=None):
                     ]
 
                     embed.set_image(url=url)
+                    
+                if type(ctx.channel) == discord.DMChannel:
+                            
+                    embed.set_footer(text="NSFW")
+                                             
+                    await ctx.send(embed=embed)
 
-                if nsfw == False:
+                elif nsfw == False:
 
                     await ctx.send(embed=embed)
 
