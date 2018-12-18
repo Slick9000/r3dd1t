@@ -30,7 +30,10 @@ async def on_message(msg):
 
 
 # def for finding an nsfw channel
+
+
 def find_nsfw(channels):
+
     for channel in channels:
 
         if type(channel) == discord.TextChannel and channel.is_nsfw():
@@ -64,8 +67,8 @@ async def sub(ctx, sub=None):
 
         embed.add_field(
             name="Bot Invite:",
-            value=f"https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
-            "&scope=bot&permissions=18432",
+            value="[Invite](https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
+            "&scope=bot&permissions=18432)",
         )
 
         embed.add_field(
@@ -91,17 +94,37 @@ async def sub(ctx, sub=None):
 
             try:
 
-                url = data[0]["data"]["children"][0]["data"]["url"]
-                name = data[0]["data"]["children"][0]["data"]["subreddit"]
-                post = data[0]["data"]["children"][0]["data"]["permalink"]
-                title = data[0]["data"]["children"][0]["data"]["title"]
-                text = data[0]["data"]["children"][0]["data"]["selftext"]
-                nsfw = data[0]["data"]["children"][0]["data"]["over_18"]
-                full_post = f"https://www.reddit.com{post}"
+                try:
 
-                embed = discord.Embed(title=name, url=full_post, color=color)
-                
+                    # TODO: Make this a class of dictionary objects
+
+                    url = data[0]["data"]["children"][0]["data"]["url"]
+                    name = data[0]["data"]["children"][0]["data"]["subreddit"]
+                    timestamp = dt.datetime.fromtimestamp(
+                        data[0]["data"]["children"][0]["data"]["created_utc"]
+                    )
+                    author = data[0]["data"]["children"][0]["data"]["author"]
+                    post = data[0]["data"]["children"][0]["data"]["permalink"]
+                    title = data[0]["data"]["children"][0]["data"]["title"]
+                    text = data[0]["data"]["children"][0]["data"]["selftext"]
+                    nsfw = data[0]["data"]["children"][0]["data"]["over_18"]
+                    full_post = f"https://www.reddit.com{post}"
+                    media = data[0]["data"]["children"][0]["data"]["media"]["oembed"]
+
+                except TypeError:
+
+                    media = None
+
+                embed = discord.Embed(
+                    title=name, 
+                    url=full_post, 
+                    timestamp=timestamp, 
+                    color=color
+                )
+
                 embed.add_field(name="Title:", value=title, inline=False)
+
+                embed.set_footer(text=f"Author: {author}")
 
                 if text != "":
 
@@ -109,7 +132,7 @@ async def sub(ctx, sub=None):
 
                         text = f"Content is too large...\n{full_post}"
 
-                    embed.add_field(name="Content:", value=text, inline=False)
+                    embed.add_field(name="Content:", value=text)
 
                 if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
 
@@ -117,23 +140,33 @@ async def sub(ctx, sub=None):
 
                 if url.startswith("https://imgur.com"):
 
-                    url = data[0]["data"]["children"][0]["data"]["media"]["oembed"][
-                        "thumbnail_url"
-                    ]
+                    url = media["thumbnail_url"]
 
                     embed.set_image(url=url)
-                    
-                if type(ctx.channel) == discord.DMChannel:
-                            
-                    embed.set_footer(text="NSFW")
-                                             
+
+                if media:
+
+                    if media["type"] == "video":
+
+                        embed.add_field(
+                            name="Video Title:",
+                            value="[{}]({})".format(media["title"], url),
+                        )
+
+                        embed.add_field(
+                            name="Channel:",
+                            value="[{}]({})".format(
+                                media["author_name"], media["author_url"]
+                            ),
+                        )
+
+                        embed.set_image(url=media["thumbnail_url"])
+
+                if not nsfw:
+
                     await ctx.send(embed=embed)
 
-                elif nsfw == False:
-
-                    await ctx.send(embed=embed)
-
-                elif nsfw == True and ctx.channel.is_nsfw():
+                elif nsfw and ctx.channel.is_nsfw():
 
                     await ctx.send(embed=embed)
 
@@ -175,7 +208,9 @@ async def sub(ctx, sub=None):
 
                 error = discord.Embed(color=color)
 
-                error.add_field(name="Subreddit Error", value="Subreddit was not found.")
+                error.add_field(
+                    name="Subreddit Error", value="Subreddit was not found."
+                )
 
                 await ctx.send(embed=error)
 
