@@ -117,13 +117,13 @@ async def sub(ctx, sub=None):
                     media = None
 
                 embed = discord.Embed(
-                    title=name, 
-                    url=full_post, 
-                    timestamp=timestamp, 
+                    title=name,
+                    url=full_post,
+                    timestamp=timestamp,
                     color=color
                 )
 
-                embed.add_field(name="Title:", value=title, inline=False)
+                embed.add_field(name="Title", value=title, inline=False)
 
                 embed.set_footer(text=f"Author: {author}")
 
@@ -133,7 +133,7 @@ async def sub(ctx, sub=None):
 
                         text = f"Content is too large...\n{full_post}"
 
-                    embed.add_field(name="Content:", value=text)
+                    embed.add_field(name="Content", value=text)
 
                 if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
 
@@ -150,12 +150,12 @@ async def sub(ctx, sub=None):
                     if media["type"] == "video":
 
                         embed.add_field(
-                            name="Video Title:",
+                            name="Video Title",
                             value="[{}]({})".format(media["title"], url),
                         )
 
                         embed.add_field(
-                            name="Channel:",
+                            name="Channel",
                             value="[{}]({})".format(
                                 media["author_name"], media["author_url"]
                             ),
@@ -214,6 +214,7 @@ async def sub(ctx, sub=None):
                 )
 
                 await ctx.send(embed=error)
+
 
 
             
