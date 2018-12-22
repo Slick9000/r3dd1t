@@ -239,7 +239,7 @@ async def userinfo(ctx, *, username):
                 user = f"https://reddit.com/user/{name}/"
                 employee = data["data"]["is_employee"]
                 premium = data["data"]["is_gold"]
-                avatar = data["data"]["icon_img"]
+                avatar = data["data"]["icon_img"].split("?")[0]
                 timestamp = dt.datetime.fromtimestamp(data["data"]["created_utc"])
                 link_karma = data["data"]["link_karma"]
                 comment_karma = data["data"]["comment_karma"]
