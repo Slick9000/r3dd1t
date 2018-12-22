@@ -100,16 +100,16 @@ async def sub(ctx, sub=None):
                     # TODO: Make this a class of dictionary objects
 
                     url = data[0]["data"]["children"][0]["data"]["url"]
-                    name = data[0]["data"]["children"][0]["data"]["subreddit"]
+                    subreddit = data[0]["data"]["children"][0]["data"]["subreddit"]
                     timestamp = dt.datetime.fromtimestamp(
                         data[0]["data"]["children"][0]["data"]["created_utc"]
                     )
                     author = data[0]["data"]["children"][0]["data"]["author"]
-                    post = data[0]["data"]["children"][0]["data"]["permalink"]
+                    permalink = data[0]["data"]["children"][0]["data"]["permalink"]
                     title = data[0]["data"]["children"][0]["data"]["title"]
                     text = data[0]["data"]["children"][0]["data"]["selftext"]
                     nsfw = data[0]["data"]["children"][0]["data"]["over_18"]
-                    full_post = f"https://www.reddit.com{post}"
+                    post = f"https://www.reddit.com{permalink}"
                     media = data[0]["data"]["children"][0]["data"]["media"]["oembed"]
 
                 except TypeError:
@@ -117,10 +117,7 @@ async def sub(ctx, sub=None):
                     media = None
 
                 embed = discord.Embed(
-                    title=name,
-                    url=full_post,
-                    timestamp=timestamp,
-                    color=color
+                    title=subreddit, url=post, timestamp=timestamp, color=color
                 )
 
                 embed.add_field(name="Title", value=title, inline=False)
@@ -164,11 +161,11 @@ async def sub(ctx, sub=None):
                         embed.set_image(url=media["thumbnail_url"])
 
                 if type(ctx.channel) == discord.DMChannel:
-                    
+
                     embed.set_footer(text="NSFW")
-                    
-                    await ctx.send(embed=embed)        
-                        
+
+                    await ctx.send(embed=embed)
+
                 elif not nsfw:
 
                     await ctx.send(embed=embed)
@@ -183,7 +180,7 @@ async def sub(ctx, sub=None):
 
                     if channel == None:
 
-                        embed = discord.Embed(color=color)
+                        info = discord.Embed(color=color)
 
                         embed.add_field(
                             name="NSFW Content",
@@ -192,7 +189,7 @@ async def sub(ctx, sub=None):
                             "Therefore, no content was posted as a precaution.",
                         )
 
-                        await ctx.send(embed=embed)
+                        await ctx.send(embed=info)
 
                     else:
 
@@ -221,6 +218,60 @@ async def sub(ctx, sub=None):
 
                 await ctx.send(embed=error)
 
+
+@bot.command(aliases=["user"])
+async def userinfo(ctx, *, username):
+    """Retrieve info about a user."""
+
+    color = 0xFF4500
+
+    async with aiohttp.ClientSession() as cs:
+
+        async with cs.get(f"https://api.reddit.com/user/{username}/about") as r:
+
+            data = await r.json()
+
+            try:
+
+                # TODO: Make this a class of dictionary objects
+
+                name = data["data"]["name"]
+                user = f"https://reddit.com/user/{name}/"
+                employee = data["data"]["is_employee"]
+                premium = data["data"]["is_gold"]
+                avatar = data["data"]["icon_img"]
+                timestamp = dt.datetime.fromtimestamp(data["data"]["created_utc"])
+                link_karma = data["data"]["link_karma"]
+                comment_karma = data["data"]["comment_karma"]
+                verified = data["data"]["verified"]
+
+                embed = discord.Embed(
+                    title=name, url=user, timestamp=timestamp, color=color
+                )
+
+                embed.add_field(name="Verified", value=verified)
+
+                embed.add_field(name="Comment Karma", value=comment_karma)
+
+                embed.add_field(name="Post Karma", value=link_karma)
+
+                embed.add_field(name="Employee", value=employee)
+
+                embed.add_field(name="Premium", value=premium)
+
+                embed.set_image(url=avatar)
+
+                await ctx.send(embed=embed)
+
+            except KeyError:
+
+                error = discord.Embed(color=color)
+
+                error.add_field(
+                    name="User Error", value="User was unfound or nonexistant."
+                )
+
+                await ctx.send(embed=error)
 
 
             
