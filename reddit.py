@@ -69,7 +69,7 @@ async def sub(ctx, sub=None):
         embed.add_field(
             name="Bot Invite:",
             value=f"[Invite](https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
-            "&scope=bot&permissions=18432)",
+            f"&scope=bot&permissions=18432)",
         )
 
         embed.add_field(
