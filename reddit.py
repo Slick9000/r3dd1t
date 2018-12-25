@@ -162,8 +162,6 @@ async def sub(ctx, sub=None):
 
                 if type(ctx.channel) == discord.DMChannel:
 
-                    embed.set_footer(text="NSFW")
-
                     await ctx.send(embed=embed)
 
                 elif not nsfw:
@@ -258,6 +256,8 @@ async def userinfo(ctx, *, username):
                 embed.add_field(name="Employee", value=employee)
 
                 embed.add_field(name="Premium", value=premium)
+                
+                embed.set_footer(text="Joined")
 
                 embed.set_image(url=avatar)
 
