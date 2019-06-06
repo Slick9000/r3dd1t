@@ -1,14 +1,13 @@
 import aiohttp
-import datetime as dt
 import discord
+import datetime as dt
 from discord.ext import commands
-import os
 
 bot = commands.Bot(command_prefix="r!", case_insensitive=True)
 bot.remove_command("help")
 
-
 # def for finding an nsfw channel
+
 
 def find_nsfw(channels):
 
@@ -22,7 +21,11 @@ def find_nsfw(channels):
 @bot.event
 async def on_ready():
 
-    await bot.change_presence(activity=discord.Game(name="on reddit :3 | r!help"))
+    await bot.change_presence(
+        activity=discord.Activity(
+            name="reddit :3 | r!help", type=discord.ActivityType.watching
+        )
+    )
 
     print(f"Logged in on {len(bot.guilds)} servers")
 
@@ -45,6 +48,8 @@ async def on_message(msg):
     if msg.content.startswith("r/"):
 
         sub = msg.content.split("/")[1]
+
+        listings = ["best", "hot", "new", "random", "rising", "top"]
 
         async with aiohttp.ClientSession() as cs:
 
@@ -285,5 +290,4 @@ async def help(ctx):
     await ctx.send(embed=embed)
 
 
- 
 bot.run(os.environ['TOKEN'])
