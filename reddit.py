@@ -4,7 +4,7 @@ import os
 import datetime as dt
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix="r!", case_insensitive=True)
+bot = commands.Bot(command_prefix="r~", case_insensitive=True)
 bot.remove_command("help")
 
 # def for finding an nsfw channel
