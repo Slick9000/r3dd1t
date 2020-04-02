@@ -141,7 +141,7 @@ async def on_message(msg):
 
                         else:
 
-                            nsfw_channel = find_nsfw(ctx.guild.channels)
+                            nsfw_channel = find_nsfw(channel.guild.channels)
 
                             if nsfw_channel == None:
 
@@ -166,7 +166,7 @@ async def on_message(msg):
                                     name="NSFW Content",
                                     value="The content from this subreddit happens to be NSFW content, "
                                     "and this command wasn't used in an NSFW channel.\n"
-                                    f"However we posted it to {channel.mention}, an NSFW channel.",
+                                    f"However we posted it to {nsfw_channel.mention}, an NSFW channel.",
                                 )
 
                                 info.set_footer(
@@ -241,13 +241,13 @@ async def on_message(msg):
 
     await bot.process_commands(msg)
 
-
-@bot.command()
-async def ping(ctx):
-    """Test the bot's uptime"""
+    
+@bot.command()	
+async def ping(ctx):	
+    """Test the bot's uptime"""	
 
     await ctx.send("Pong!")
-    
+
 @bot.command()
 async def help(ctx):
     """The reddit command."""
@@ -295,6 +295,5 @@ async def help(ctx):
     )
 
     await ctx.send(embed=embed)
-
 
 bot.run(os.environ['TOKEN'])
