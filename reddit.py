@@ -1,5 +1,6 @@
 import aiohttp
 import discord
+import os
 import datetime as dt
 from discord.ext import commands
 
@@ -241,6 +242,12 @@ async def on_message(msg):
     await bot.process_commands(msg)
 
 
+@bot.command()
+async def ping(ctx):
+    """Test the bot's uptime"""
+
+    await ctx.send("Pong!")
+    
 @bot.command()
 async def help(ctx):
     """The reddit command."""
