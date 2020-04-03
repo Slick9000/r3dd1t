@@ -24,7 +24,7 @@ async def on_ready():
 
     await bot.change_presence(
         activity=discord.Activity(
-            name="reddit :3 | r!help", type=discord.ActivityType.watching
+            name="reddit :3 | r~help", type=discord.ActivityType.watching
         )
     )
 
