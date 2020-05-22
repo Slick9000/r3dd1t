@@ -60,8 +60,6 @@ async def on_message(msg):
 
                 try:
 
-                    try:
-
                         # TODO: Make this a class of dictionary objects
 
                         url = data[0]["data"]["children"][0]["data"]["url"]
@@ -75,13 +73,9 @@ async def on_message(msg):
                         text = data[0]["data"]["children"][0]["data"]["selftext"]
                         nsfw = data[0]["data"]["children"][0]["data"]["over_18"]
                         post = f"https://www.reddit.com{permalink}"
-                        media = data[0]["data"]["children"][0]["data"]["media"][
-                            "oembed"
-                        ]
-
-                    except TypeError:
-
-                        media = None
+                        media = data[0]["data"]["children"][0]["data"]["media"]
+                        post = f"https://www.reddit.com{permalink}"
+                        
 
                         embed = discord.Embed(
                             title=subreddit, url=post, timestamp=timestamp, color=color
@@ -95,7 +89,7 @@ async def on_message(msg):
 
                             if len(text) > 1024:
 
-                                text = f"Content is too large...\n{full_post}"
+                                text = f"Content is too large...\n{post}"
 
                                 embed.add_field(name="Content", value=text)
 
@@ -242,9 +236,9 @@ async def on_message(msg):
     await bot.process_commands(msg)
 
     
-@bot.command()	
-async def ping(ctx):	
-    """Test the bot's uptime"""	
+@bot.command()
+async def ping(ctx):
+    """Test the bot's uptime"""
 
     await ctx.send("Pong!")
 
@@ -295,5 +289,6 @@ async def help(ctx):
     )
 
     await ctx.send(embed=embed)
+
 
 bot.run(os.environ['TOKEN'])
