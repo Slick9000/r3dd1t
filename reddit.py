@@ -7,6 +7,8 @@ from discord.ext import commands
 bot = commands.Bot(command_prefix="r~", case_insensitive=True)
 bot.remove_command("help")
 
+color = 0xFF4500
+
 # def for finding an nsfw channel
 
 
@@ -34,7 +36,6 @@ async def on_ready():
 @bot.event
 async def on_message(msg):
 
-    color = 0xFF4500
 
     channel = msg.channel
 
@@ -243,10 +244,25 @@ async def ping(ctx):
     await ctx.send("Pong!")
 
 @bot.command()
+async def feedback(ctx, feedback):
+    """Sends a DM via the bot to the bot owner
+    And also stores the feedback in a file."""
+
+    owner = discord.utils.get(bot.users, id=357_641_367_507_435_531)
+
+    content = discord.Embed(color=color)
+
+    content.add_field(
+        name="User Feedback", value=feedback
+    )
+
+    content.set_footer(text=f"Contribution made by {ctx.author}")
+
+    await owner.send(embed=content)
+    
+@bot.command()
 async def help(ctx):
     """The reddit command."""
-
-    color = 0xFF4500
 
     owner = discord.utils.get(bot.users, id=357_641_367_507_435_531)
 
@@ -282,6 +298,14 @@ async def help(ctx):
         "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
         "If no NSFW channel exists, it simply doesn't post it. Lovely.\n"
         "**Note:** This does not apply to DM channels. NSFW content will always post in that situation.",
+    )
+
+    embed.add_field(
+        name="Feedback and Bugs",
+        value="If the bot has any bugs, or if you would like to see a feature added to the bot,\n"
+        "You can feel free to use the r~feedback command. n"
+        "This sends me whatever feedback you have to my private DM, and is also stored in a database."
+        "Any help would be greatly appreciated!"
     )
 
     embed.set_thumbnail(
