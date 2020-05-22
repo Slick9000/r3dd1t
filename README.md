@@ -15,4 +15,4 @@ r3dd1t is always live, reliable and quick. hours of work and bug testing have be
 i will try to fix all bugs as soon as possible
 
 ## Features
-features for r3dd1t will be based on feedback of the bot, using the feedback command or ideas i decide will improve the bot.
+features for r3dd1t will be based on feedback of the bot, using the (WIP) r~feedback command or ideas i decide will improve the bot.
