@@ -277,13 +277,13 @@ async def help(ctx):
 
     embed.add_field(
         name="User lookup",
-        value="R3dd1t also has a userlookup command to view a user's information.\n"
+        value="R3dd1t also has a user lookup command to view a user's information.\n"
         "Try `u/reddit` or `u/(username)`.",
     )
 
     embed.add_field(
         name="Author",
-        value=f"This bot was created by {owner.name}#{owner.discriminator} (ID: {owner.id}) in discord.py.",
+        value=f"This bot was created by {owner.name}#{owner.discriminator} (ID: `{owner.id}`) in discord.py.",
     )
 
     embed.add_field(
@@ -303,8 +303,8 @@ async def help(ctx):
     embed.add_field(
         name="Feedback and Bugs",
         value="If the bot has any bugs, or if you would like to see a feature added to the bot,\n"
-        "You can feel free to use the r~feedback command. n"
-        "This sends me whatever feedback you have to my private DM, and is also stored in a database."
+        "You can feel free to use the `r~feedback` command.\n"
+        "This sends me whatever feedback you have to my private DM, and is also stored in a database.\n"
         "Any help would be greatly appreciated!"
     )
 
