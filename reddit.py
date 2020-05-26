@@ -86,13 +86,11 @@ async def on_message(msg):
 
                         embed.set_footer(text=f"Author: {author}")
 
-                        if text != "":
+                        if len(text) > 1024 and text != "":
 
-                            if len(text) > 1024:
+                            text = f"Content is too large...\n{post}"
 
-                                text = f"Content is too large...\n{post}"
-
-                                embed.add_field(name="Content", value=text)
+                            embed.add_field(name="Content", value=text)
 
                         if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
 
@@ -174,8 +172,22 @@ async def on_message(msg):
 
                     error = discord.Embed(color=color)
 
-                    error.add_field(
-                        name="Subreddit Error", value="Subreddit was not found."
+                    error.set_footer(text=f"Error {data['error']}")
+                    
+                    if data["reason"] == "quarantined":
+
+                        error.add_field(
+                        name="Quarantined Subreddit", value=data[
+                            "quarantine_message"
+                            ]
+                    )
+
+                    if data["reason"] == "private":
+
+                        error.add_field(
+                            name="Private Subreddit", value = data[
+                                "message"
+                                ]
                     )
 
                     await channel.send(embed=error)
