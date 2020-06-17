@@ -1,5 +1,5 @@
 # R3dd1t
-reddit bot for discord, written in python using the reddit api, and hosted on heroku.
+reddit bot for discord, written in python using the reddit api, and hosted on [heroku](https://heroku.com).
 
 besides the cringe l33t naming scheme, r3dd1t is a simplistic, reliable bot made to fetch random posts of the subreddit specified. i made it because i wanted to be able to look at reddit without having to sift through older and newer posts. this allows me to do so. it was also designed to be very easy to use.
 
