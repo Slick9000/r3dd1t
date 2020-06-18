@@ -172,22 +172,8 @@ async def on_message(msg):
 
                     error = discord.Embed(color=color)
 
-                    error.set_footer(text=f"Error {data['error']}")
-                    
-                    if data["reason"] == "quarantined":
-
-                        error.add_field(
-                        name="Quarantined Subreddit", value=data[
-                            "quarantine_message"
-                            ]
-                    )
-
-                    if data["reason"] == "private":
-
-                        error.add_field(
-                            name="Private Subreddit", value = data[
-                                "message"
-                                ]
+                    error.add_field(
+                        name="Subreddit Error", value="Subreddit was not found."
                     )
 
                     await channel.send(embed=error)
