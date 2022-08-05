@@ -262,55 +262,68 @@ async def feedback(ctx, *, feedback):
 async def help(ctx):
     """The reddit command."""
 
-    owner = discord.utils.get(bot.users, id=357_641_367_507_435_531)
+    async with aiohttp.ClientSession() as cs:
 
-    embed = discord.Embed(color=color)
+            async with cs.get(f"https://api.reddit.com/r/random") as r:
 
-    embed.add_field(
-        name="R3dd1t",
-        value="Thanks for inviting R3dd1t to your server!\n"
-        "This bot essentially gets images from any subreddit you specify.\n"
-        "Try `r/woooosh` or `r/ProgrammerHumor`.",
-    )
+                data = await r.json()
 
-    embed.add_field(
-        name="User lookup",
-        value="R3dd1t also has a user lookup command to view a user's information.\n"
-        "Try `u/reddit` or `u/(username)`.",
-    )
+                embed = discord.Embed(color=color)
 
-    embed.add_field(
-        name="Author",
-        value=f"This bot was created by {owner.name}#{owner.discriminator} (ID: `{owner.id}`) in discord.py.",
-    )
+                embed.add_field(
+                    name="R3dd1t",
+                    value="Thanks for inviting R3dd1t to your server!\n"
+                    "This bot essentially gets images from any subreddit you specify.\n"
+                    f"Try looking at a new sub!",
+                )
 
-    embed.add_field(
-        name="Bot Invite:",
-        value=f"[Invite](https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
-        f"&scope=bot&permissions=18432)",
-    )
+                embed = discord.Embed(color=color)
 
-    embed.add_field(
-        name="NSFW Content Checks",
-        value="There's no need to worry about NSFW content, ever.\n"
-        "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
-        "If no NSFW channel exists, it simply doesn't post it. Lovely.\n"
-        "**Note:** This does not apply to DM channels. NSFW content will always post in that situation.",
-    )
+                embed.add_field(
+                    name="R3dd1t",
+                    value="Thanks for inviting R3dd1t to your server!\n"
+                    "This bot essentially gets images from any subreddit you specify.\n"
+                    "Try `r/woooosh` or `r/ProgrammerHumor`.",
+                )
 
-    embed.add_field(
-        name="Feedback and Bugs",
-        value="If the bot has any bugs, or if you would like to see a feature added to the bot,\n"
-        "You can feel free to use the `r~feedback` command.\n"
-        "This sends me whatever feedback you have to my private DM, and is also stored in a database.\n"
-        "Any help would be greatly appreciated!"
-    )
+                embed.add_field(
+                    name="User lookup",
+                    value="R3dd1t also has a user lookup command to view a user's information.\n"
+                    "Try `u/reddit` or `u/(username)`.",
+                )
 
-    embed.set_thumbnail(
-        url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png"
-    )
+                embed.add_field(
+                    name="Author",
+                    value=f"This bot was created by Slick9000#2237 in discord.py.",
+                )
 
-    await ctx.send(embed=embed)
+                embed.add_field(
+                    name="Bot Invite:",
+                    value=f"[Invite](https://discordapp.com/oauth2/authorize?client_id={bot.user.id}"
+                    f"&scope=bot&permissions=18432)",
+                )
+
+                embed.add_field(
+                    name="NSFW Content Checks",
+                    value="There's no need to worry about NSFW content, ever.\n"
+                    "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
+                    "If no NSFW channel exists, it simply doesn't post it. Lovely.\n"
+                    "**Note:** This does not apply to DM channels. NSFW content will always post in that situation.",
+                )
+
+                embed.add_field(
+                    name="Feedback and Bugs",
+                    value="If the bot has any bugs, or if you would like to see a feature added to the bot,\n"
+                    "You can feel free to use the `r~feedback` command.\n"
+                    "This sends me whatever feedback you have to my private DM, and is also stored in a database.\n"
+                    "Any help would be greatly appreciated!"
+                )
+
+                embed.set_thumbnail(
+                    url="https://cdn.discordapp.com/attachments/507339242096033792/519655500216926208/885444_news_512x512.png"
+                )
+
+                await ctx.send(embed=embed)
 
 
 bot.run(os.environ['TOKEN'])
