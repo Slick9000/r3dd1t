@@ -3,9 +3,22 @@ import discord
 import os
 import datetime as dt
 from discord.ext import commands
+from discord.ext import tasks
+import random
 
-bot = commands.Bot(command_prefix="r~", case_insensitive=True)
+intents = discord.Intents.default()
+
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="r~", intents=intents, case_insensitive=True)
+
 bot.remove_command("help")
+
+statuses = ['you make stupid comments', 'ai take over', 
+            'you argue with children', 'the internet', 'scary videos',
+            'cat videos', 'something idk', 'you read these? lol',
+            'slick sleep', 'twitch.tv', 'changes be made to my code',
+            'the world spin', 'your spotify unwrapped']
 
 color = 0xFF4500
 
@@ -20,22 +33,26 @@ def find_nsfw(channels):
 
             return channel
 
-
 @bot.event
 async def on_ready():
 
     await bot.change_presence(
         activity=discord.Activity(
-            name="reddit :3 | r~help", type=discord.ActivityType.watching
+            name=random.choice(statuses), type=discord.ActivityType.watching
         )
     )
 
     print(f"Logged in on {len(bot.guilds)} servers")
 
+@tasks.loop(seconds=40)
+async def change_presence():
+
+    await bot.change_presence(discord.Activity(
+            name=random.choice(statuses), type=discord.ActivityType.watching
+    ))
 
 @bot.event
 async def on_message(msg):
-
 
     channel = msg.channel
 
@@ -48,135 +65,134 @@ async def on_message(msg):
         return
 
     if msg.content.startswith("r/"):
-
+            
         sub = msg.content.split("/")[1]
 
-        listings = ["best", "hot", "new", "random", "rising", "top"]
+        listings = ["best", "hot", "new", "rising", "top"]
 
         async with aiohttp.ClientSession() as cs:
 
-            async with cs.get(f"https://api.reddit.com/r/{sub}/random") as r:
+            async with cs.get(f"https://api.reddit.com/r/{sub}/{random.choice(listings)}") as r:
 
-                data = await r.json()
+                info = await r.json()
 
                 try:
 
-                        # TODO: Make this a class of dictionary objects
+                    data = info[0]
 
-                        url = data[0]["data"]["children"][0]["data"]["url"]
-                        subreddit = data[0]["data"]["children"][0]["data"]["subreddit"]
-                        timestamp = dt.datetime.fromtimestamp(
-                            data[0]["data"]["children"][0]["data"]["created_utc"]
+                except:
+
+                    data = info
+
+                post = random.randint(0,24)
+
+                url = data["data"]["children"][post]["data"]["url"]
+                subreddit = data["data"]["children"][post]["data"]["subreddit"]
+                timestamp = dt.datetime.fromtimestamp(
+                    data["data"]["children"][post]["data"]["created_utc"]
+                )
+                author = data["data"]["children"][post]["data"]["author"]
+                permalink = data["data"]["children"][post]["data"]["permalink"]
+                title = data["data"]["children"][post]["data"]["title"]
+                text = data["data"]["children"][post]["data"]["selftext"]
+                nsfw = data["data"]["children"][post]["data"]["over_18"]
+                link = f"https://www.reddit.com{permalink}"
+                media = data["data"]["children"][post]["data"]["media"]
+                
+
+                embed = discord.Embed(
+                    title=subreddit, url=link, timestamp=timestamp, color=color
+                )
+
+                embed.add_field(name="Title", value=title, inline=False)
+
+                embed.set_footer(text=f"Author: {author}")
+
+                if len(text) > 1024 and text != "":
+
+                    text = f"Content is too large...\n{link}"
+
+                    embed.add_field(name="Content", value=text)
+
+                if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
+
+                    embed.set_image(url=url)
+
+                if url.startswith("https://imgur.com"):
+
+                    url = media["thumbnail_url"]
+
+                    embed.set_image(url=url)
+
+                if media:
+
+                    if media["type"] == "video":
+
+                        embed.add_field(
+                            name="Video Title",
+                            value="[{}]({})".format(media["title"], url),
                         )
-                        author = data[0]["data"]["children"][0]["data"]["author"]
-                        permalink = data[0]["data"]["children"][0]["data"]["permalink"]
-                        title = data[0]["data"]["children"][0]["data"]["title"]
-                        text = data[0]["data"]["children"][0]["data"]["selftext"]
-                        nsfw = data[0]["data"]["children"][0]["data"]["over_18"]
-                        post = f"https://www.reddit.com{permalink}"
-                        media = data[0]["data"]["children"][0]["data"]["media"]
-                        post = f"https://www.reddit.com{permalink}"
-                        
 
-                        embed = discord.Embed(
-                            title=subreddit, url=post, timestamp=timestamp, color=color
+                        embed.add_field(
+                            name="Channel",
+                            value="[{}]({})".format(
+                                media["author_name"], media["author_url"]
+                            ),
                         )
 
-                        embed.add_field(name="Title", value=title, inline=False)
+                        embed.set_image(url=media["thumbnail_url"])
 
-                        embed.set_footer(text=f"Author: {author}")
+                if type(channel) == discord.DMChannel:
 
-                        if len(text) > 1024 and text != "":
+                    await channel.send(embed=embed)
 
-                            text = f"Content is too large...\n{post}"
+                elif not nsfw:
 
-                            embed.add_field(name="Content", value=text)
+                    await channel.send(embed=embed)
 
-                        if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
+                elif nsfw and channel.is_nsfw():
 
-                            embed.set_image(url=url)
+                    await channel.send(embed=embed)
 
-                        if url.startswith("https://imgur.com"):
+                else:
 
-                            url = media["thumbnail_url"]
+                    nsfw_channel = find_nsfw(channel.guild.channels)
 
-                            embed.set_image(url=url)
+                    if nsfw_channel == None:
 
-                        if media:
+                        info = discord.Embed(color=color)
 
-                            if media["type"] == "video":
+                        info.add_field(
+                            name="NSFW Content",
+                            value="The content from this subreddit happens to be NSFW content, "
+                            "and no NSFW channel exists on this server, therefore we assume it is not allowed.\n\n"
+                            "Feel free to access this in another guild or in DM.",
+                        )
 
-                                embed.add_field(
-                                    name="Video Title",
-                                    value="[{}]({})".format(media["title"], url),
-                                )
+                        info.set_footer(
+                            text="*Protecting the world one command at a time!*"
+                        )
 
-                                embed.add_field(
-                                    name="Channel",
-                                    value="[{}]({})".format(
-                                        media["author_name"], media["author_url"]
-                                    ),
-                                )
+                        await channel.send(embed=info)
 
-                                embed.set_image(url=media["thumbnail_url"])
+                    else:
 
-                        if type(channel) == discord.DMChannel:
+                        await nsfw_channel.send(embed=embed)
 
-                            await channel.send(embed=embed)
+                        info = discord.Embed(color=color)
 
-                        elif not nsfw:
+                        info.add_field(
+                            name="NSFW Content",
+                            value="The content from this subreddit happens to be NSFW content, "
+                            "and this command wasn't used in an NSFW channel.\n"
+                            f"However we posted it to {nsfw_channel.mention}, an NSFW channel.",
+                        )
 
-                            await channel.send(embed=embed)
+                        info.set_footer(
+                            text="Now can I have my coffee back? :3"
+                        )
 
-                        elif nsfw and channel.is_nsfw():
-
-                            await channel.send(embed=embed)
-
-                        else:
-
-                            nsfw_channel = find_nsfw(channel.guild.channels)
-
-                            if nsfw_channel == None:
-
-                                info = discord.Embed(color=color)
-
-                                embed.add_field(
-                                    name="NSFW Content",
-                                    value="The content from this subreddit happens to be NSFW content, "
-                                    "and no NSFW channel exists on this server.\n"
-                                    "Therefore, no content was posted as a precaution.",
-                                )
-
-                                await channel.send(embed=info)
-
-                            else:
-
-                                await nsfw_channel.send(embed=embed)
-
-                                info = discord.Embed(color=color)
-
-                                info.add_field(
-                                    name="NSFW Content",
-                                    value="The content from this subreddit happens to be NSFW content, "
-                                    "and this command wasn't used in an NSFW channel.\n"
-                                    f"However we posted it to {nsfw_channel.mention}, an NSFW channel.",
-                                )
-
-                                info.set_footer(
-                                    text="Now can I have my coffee back? :3"
-                                )
-
-                                await channel.send(embed=info)
-
-                except KeyError:
-
-                    error = discord.Embed(color=color)
-
-                    error.add_field(
-                        name="Subreddit Error", value="Subreddit was not found."
-                    )
-
-                    await channel.send(embed=error)
+                        await channel.send(embed=info)
 
     elif msg.content.startswith("u/"):
 
