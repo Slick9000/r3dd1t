@@ -1,9 +1,9 @@
-# R3dd1t
+# r3dd1t
 reddit bot for discord, written in python.
 
 besides the cringe l33t naming scheme, r3dd1t is a simplistic, reliable bot made to fetch random posts of the subreddit specified.
 
-## Usage
+## usage
 you can add the bot via it's [invite link](https://discordapp.com/channels/422293824770146304/422311739028275210/695417594420658177), or you can self host it yourself. please credit me if you want to self host it.
 
 **r/** is the prefix for finding subreddits, 
@@ -14,7 +14,7 @@ you can add the bot via it's [invite link](https://discordapp.com/channels/42229
 
 **r~feedback** allows you to send user feedback directly to me, the bot owner!
 
-## Stability
+## stability
 r3dd1t is always live, reliable and quick. hours of work and bug testing have been undergone to ensure that it stays this way.
 
 there are currently no future planned updates for this bot, so feel free to send me feedback if there is anything you desire.
