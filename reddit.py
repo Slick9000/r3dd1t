@@ -271,11 +271,23 @@ async def ping(ctx):
     await ctx.send("Pong!")
 
 @bot.command()
-async def feedback(ctx, *, feedback):
+async def feedback(ctx, *feedback):
     """Sends a DM via the bot to the bot owner
     And also stores the feedback in a file."""
 
-    owner = discord.utils.get(bot.users, id=357_641_367_507_435_531)
+    if len(feedback) < 1:
+
+        content = discord.Embed(color=color)
+
+        content.add_field(
+            name="User Feedback", value="No feedback provided!"
+        )
+
+        await ctx.send(embed=content)
+
+        return
+
+    owner = await bot.fetch_user("357641367507435531")
 
     content = discord.Embed(color=color)
 
@@ -336,8 +348,7 @@ async def help(ctx):
                     name="NSFW Content Checks",
                     value="There's no need to worry about NSFW content, ever.\n"
                     "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
-                    "If no NSFW channel exists, it simply doesn't post it. Lovely.\n"
-                    "**Note:** This does not apply to DM channels. NSFW content will always post in that situation.",
+                    "If no NSFW channel exists, it simply doesn't post it. NSFW content will appear in DM.\n"
                 )
 
                 embed.add_field(
