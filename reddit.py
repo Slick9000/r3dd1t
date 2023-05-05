@@ -100,6 +100,8 @@ async def on_message(msg):
 
                     await channel.send(embed=error)
 
+                    return
+
                 subreddit = data["data"]["children"][post]["data"]["subreddit"]
                 timestamp = dt.datetime.fromtimestamp(
                     data["data"]["children"][post]["data"]["created_utc"]
@@ -218,8 +220,6 @@ async def on_message(msg):
                 data = await r.json()
 
                 try:
-
-                    # TODO: Make this a class of dictionary objects
 
                     name = data["data"]["name"]
                     user = f"https://reddit.com/user/{name}/"
