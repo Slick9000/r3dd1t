@@ -271,7 +271,7 @@ async def ping(ctx):
     await ctx.send("Pong!")
 
 @bot.command()
-async def feedback(ctx, *feedback):
+async def feedback(ctx, *, feedback):
     """Sends a DM via the bot to the bot owner
     And also stores the feedback in a file."""
 
