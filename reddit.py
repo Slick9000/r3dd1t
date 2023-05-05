@@ -86,7 +86,20 @@ async def on_message(msg):
 
                 post = random.randint(0,24)
 
-                url = data["data"]["children"][post]["data"]["url"]
+                try:
+                    
+                    url = data["data"]["children"][post]["data"]["url"]
+
+                except IndexError:
+
+                    error = discord.Embed(color=color)
+
+                    error.add_field(
+                        name="Subreddit Error", value="Subreddit was not found."
+                    )
+
+                    await channel.send(embed=error)
+
                 subreddit = data["data"]["children"][post]["data"]["subreddit"]
                 timestamp = dt.datetime.fromtimestamp(
                     data["data"]["children"][post]["data"]["created_utc"]
