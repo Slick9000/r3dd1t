@@ -1,6 +1,5 @@
 import aiohttp
 import discord
-import os
 import datetime as dt
 from discord.ext import commands
 from discord.ext import tasks
@@ -365,5 +364,7 @@ async def help(ctx):
 
                 await ctx.send(embed=embed)
 
+token = open("token.txt").read()
 
-bot.run(os.environ['TOKEN'])
+if __name__ == '__main__':
+    bot.run(token)
