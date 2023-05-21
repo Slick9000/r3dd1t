@@ -83,13 +83,11 @@ async def on_message(msg):
 
                     data = info
 
-                post = random.randint(0,24)
-
                 try:
                     
-                    url = data["data"]["children"][post]["data"]["url"]
+                    post = random.choice(data["data"]["children"])
 
-                except IndexError:
+                except KeyError:
 
                     error = discord.Embed(color=color)
 
@@ -101,17 +99,18 @@ async def on_message(msg):
 
                     return
 
-                subreddit = data["data"]["children"][post]["data"]["subreddit"]
+                url = post["data"]["url"]
+                subreddit = post["data"]["subreddit"]
                 timestamp = dt.datetime.fromtimestamp(
-                    data["data"]["children"][post]["data"]["created_utc"]
+                    post["data"]["created_utc"]
                 )
-                author = data["data"]["children"][post]["data"]["author"]
-                permalink = data["data"]["children"][post]["data"]["permalink"]
-                title = data["data"]["children"][post]["data"]["title"]
-                text = data["data"]["children"][post]["data"]["selftext"]
-                nsfw = data["data"]["children"][post]["data"]["over_18"]
+                author = post["data"]["author"]
+                permalink = post["data"]["permalink"]
+                title = post["data"]["title"]
+                text = post["data"]["selftext"]
+                nsfw = post["data"]["over_18"]
                 link = f"https://www.reddit.com{permalink}"
-                media = data["data"]["children"][post]["data"]["media"]
+                media = post["data"]["media"]
                 
 
                 embed = discord.Embed(
@@ -317,8 +316,6 @@ async def help(ctx):
                     f"Try looking at a new sub!",
                 )
 
-                embed = discord.Embed(color=color)
-
                 embed.add_field(
                     name="R3dd1t",
                     value="Thanks for inviting R3dd1t to your server!\n"
@@ -364,7 +361,9 @@ async def help(ctx):
 
                 await ctx.send(embed=embed)
 
+
 token = open("token.txt").read()
 
 if __name__ == '__main__':
-    bot.run(token)
+
+   bot.run(token)
