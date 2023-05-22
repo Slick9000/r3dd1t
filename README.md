@@ -18,3 +18,9 @@ you can add the bot via it's [invite link](https://discordapp.com/channels/42229
 r3dd1t is always live, reliable and quick. hours of work and bug testing have been undergone to ensure that it stays this way.
 
 there are currently no future planned updates for this bot, so feel free to send me feedback if there is anything you desire.
+
+<img src="r slash command.png">
+
+<img src="u slash command.png">
+
+<img src="help command.png">
