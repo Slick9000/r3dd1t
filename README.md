@@ -10,9 +10,9 @@ you can add the bot via it's [invite link](https://discordapp.com/channels/42229
 
 **u/** is the prefix for finding a user's *public* information. r3ddit makes no attempts to access anything that couldn't already be accessed publically.
 
-**r~help** is the help command, which is also shown in it's status. 
+**r-help** is the help command, which is also shown in it's status. 
 
-**r~feedback** allows you to send user feedback directly to me, the bot owner!
+**r-feedback** allows you to send user feedback directly to me, the bot owner!
 
 ## stability
 r3dd1t is always live, reliable and quick. hours of work and bug testing have been undergone to ensure that it stays this way.
