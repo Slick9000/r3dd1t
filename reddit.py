@@ -9,15 +9,16 @@ intents = discord.Intents.default()
 
 intents.message_content = True
 
-bot = commands.Bot(command_prefix="r~", intents=intents, case_insensitive=True)
+bot = commands.Bot(command_prefix="r-", intents=intents, case_insensitive=True)
 
 bot.remove_command("help")
 
-statuses = ['you make stupid comments', 'ai take over', 
-            'you argue with children', 'the internet', 'scary videos',
-            'cat videos', 'something idk', 'you read these? lol',
-            'slick sleep', 'twitch.tv', 'changes be made to my code',
-            'the world spin', 'your spotify unwrapped']
+statuses = ['stupid comments r-help', 'ai take over r-help', 
+            'children arguing r-help', 'the internet r-help', 'scary videos r-help',
+            'cat videos r-help', 'something r-help', 'you read these? r-help',
+            'slick sleep r-help', 'twitch.tv r-help', 'the world spin r-help']
+
+print(selection)
 
 color = 0xFF4500
 
