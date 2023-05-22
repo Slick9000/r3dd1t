@@ -98,6 +98,18 @@ async def on_message(msg):
                     await channel.send(embed=error)
 
                     return
+                
+                except IndexError:
+
+                    error = discord.Embed(color=color)
+
+                    error.add_field(
+                        name="Subreddit Error", value="Subreddit was not found."
+                    )
+
+                    await channel.send(embed=error)
+
+                    return
 
                 url = post["data"]["url"]
                 subreddit = post["data"]["subreddit"]
@@ -361,7 +373,7 @@ async def help(ctx):
 
                 await ctx.send(embed=embed)
 
-
+            
 token = open("token.txt").read()
 
 if __name__ == '__main__':
