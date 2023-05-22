@@ -18,8 +18,6 @@ statuses = ['stupid comments r-help', 'ai take over r-help',
             'cat videos r-help', 'something r-help', 'you read these? r-help',
             'slick sleep r-help', 'twitch.tv r-help', 'the world spin r-help']
 
-print(selection)
-
 color = 0xFF4500
 
 # def for finding an nsfw channel
