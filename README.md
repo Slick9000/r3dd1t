@@ -5,7 +5,7 @@ besides the cringe l33t naming scheme, r3dd1t is a simplistic, reliable bot made
 
 ## ☕ donations
 
-while completely optional, it would be highly appreciated if you could donate if you find this tutorial helpful! it can be of any amount.
+while completely optional, it would be highly appreciated if you could donate if you like this bot! it can be of any amount.
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/irbee246)
 
