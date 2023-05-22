@@ -324,26 +324,14 @@ async def help(ctx):
                 embed.add_field(
                     name="R3dd1t",
                     value="Thanks for inviting R3dd1t to your server!\n"
-                    "This bot essentially gets images from any subreddit you specify.\n"
-                    f"Try looking at a new sub!",
-                )
-
-                embed.add_field(
-                    name="R3dd1t",
-                    value="Thanks for inviting R3dd1t to your server!\n"
-                    "This bot essentially gets images from any subreddit you specify.\n"
+                    "This bot essentially gets images from any subreddit you specify. Made by Slick9000#2237\n"
                     "Try `r/woooosh` or `r/ProgrammerHumor`.",
                 )
 
                 embed.add_field(
                     name="User lookup",
-                    value="R3dd1t also has a user lookup command to view a user's information.\n"
+                    value="R3dd1t has a user lookup command to view a user's information.\n"
                     "Try `u/reddit` or `u/(username)`.",
-                )
-
-                embed.add_field(
-                    name="Author",
-                    value=f"This bot was created by Slick9000#2237 in discord.py.",
                 )
 
                 embed.add_field(
@@ -354,7 +342,7 @@ async def help(ctx):
 
                 embed.add_field(
                     name="NSFW Content Checks",
-                    value="There's no need to worry about NSFW content, ever.\n"
+                    value="There's no need to worry about accidental NSFW content in #general.\n"
                     "If R3dd1t detects the content is NSFW, it posts it to an NSFW channel.\n"
                     "If no NSFW channel exists, it simply doesn't post it. NSFW content will appear in DM.\n"
                 )
@@ -363,8 +351,6 @@ async def help(ctx):
                     name="Feedback and Bugs",
                     value="If the bot has any bugs, or if you would like to see a feature added to the bot,\n"
                     "You can feel free to use the `r~feedback` command.\n"
-                    "This sends me whatever feedback you have to my private DM, and is also stored in a database.\n"
-                    "Any help would be greatly appreciated!"
                 )
 
                 embed.set_thumbnail(
@@ -373,7 +359,7 @@ async def help(ctx):
 
                 await ctx.send(embed=embed)
 
-            
+
 token = open("token.txt").read()
 
 if __name__ == '__main__':
