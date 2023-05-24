@@ -140,10 +140,7 @@ async def on_message(msg):
                         value="[{}]({})".format("Video", media["reddit_video"]["scrubber_media_url"]),
                     )
 
-                    embed.add_field(
-                        name="Channel",
-                        value=post["data"]["author_fullname"],
-                    )
+                    embed.set_footer(text=f'Author: {post["data"]["author_fullname"]}')
 
                     embed.set_image(url=post["data"]["thumbnail"])
                 
