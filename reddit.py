@@ -4,6 +4,7 @@ import datetime as dt
 from discord.ext import commands
 from discord.ext import tasks
 import random
+import re
 
 intents = discord.Intents.default()
 
@@ -122,49 +123,75 @@ async def on_message(msg):
                 nsfw = post["data"]["over_18"]
                 link = f"https://www.reddit.com{permalink}"
                 media = post["data"]["secure_media"]
+
+                #print(media)
                 
 
                 embed = discord.Embed(
                     title=subreddit, url=link, timestamp=timestamp, color=color
                 )
 
-                if media:
+                try:
+                    
+                    if media["type"]:
 
-                    embed.add_field(
-                        name="Video Title",
-                        value="[{}]({})".format(post["data"]["title"], url),
-                    )
+                        direct_video = re.search(r'https.*\?',media["oembed"]["html"]).group(0)
 
-                    embed.add_field(
-                        name="Direct Video",
-                        value="[{}]({})".format("Video", media["reddit_video"]["scrubber_media_url"]),
-                    )
+                        embed.add_field(
+                            name="Video Title",
+                            value="[{}]({})".format(media["oembed"]["title"], url),
+                        )
 
-                    embed.set_footer(text=f'Author: {post["data"]["author_fullname"]}')
+                        embed.add_field(
+                            name="Direct Video",
+                            value="[{}]({})".format("Video", direct_video)
+                        )
 
-                    embed.set_image(url=post["data"]["thumbnail"])
-                
-                else:
+                        embed.set_footer(text=f'Author: {post["data"]["author_fullname"]}')
 
-                    embed.add_field(name="Title", value=title, inline=False)
+                        embed.set_image(url=media["oembed"]["thumbnail_url"])
 
-                    embed.set_footer(text=f"Author: {author}")
+                except:
 
-                    if len(text) > 1024 and text != "":
+                    if media:
 
-                        text = f"Content is too large...\n{link}"
+                        direct_video = media["reddit_video"]["scrubber_media_url"]
 
-                        embed.add_field(name="Content", value=text)
+                        embed.add_field(
+                            name="Video Title",
+                            value="[{}]({})".format(post["data"]["title"], url),
+                        )
 
-                    if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
+                        embed.add_field(
+                            name="Direct Video",
+                            value="[{}]({})".format("Video", direct_video)
+                        )
 
-                        embed.set_image(url=url)
+                        embed.set_footer(text=f'Author: {post["data"]["author_fullname"]}')
 
-                    if url.startswith("https://imgur.com"):
+                        embed.set_image(url=post["data"]["thumbnail"])
+                    
+                    else:
 
-                        url = media["thumbnail_url"]
+                        embed.add_field(name="Title", value=title, inline=False)
 
-                        embed.set_image(url=url)
+                        embed.set_footer(text=f"Author: {author}")
+
+                        if len(text) > 1024 and text != "":
+
+                            text = f"Content is too large...\n{link}"
+
+                            embed.add_field(name="Content", value=text)
+
+                        if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
+
+                            embed.set_image(url=url)
+
+                        if url.startswith("https://imgur.com"):
+
+                            url = media["thumbnail_url"]
+
+                            embed.set_image(url=url)
 
                 if type(channel) == discord.DMChannel:
 
