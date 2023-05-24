@@ -124,9 +124,7 @@ async def on_message(msg):
                 link = f"https://www.reddit.com{permalink}"
                 media = post["data"]["secure_media"]
 
-                #print(media)
-                
-
+            
                 embed = discord.Embed(
                     title=subreddit, url=link, timestamp=timestamp, color=color
                 )
@@ -134,8 +132,6 @@ async def on_message(msg):
                 try:
                     
                     if media["type"]:
-
-                        print(media)
 
                         try:
                             
