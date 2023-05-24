@@ -121,50 +121,53 @@ async def on_message(msg):
                 text = post["data"]["selftext"]
                 nsfw = post["data"]["over_18"]
                 link = f"https://www.reddit.com{permalink}"
-                media = post["data"]["media"]
+                media = post["data"]["secure_media"]
                 
 
                 embed = discord.Embed(
                     title=subreddit, url=link, timestamp=timestamp, color=color
                 )
 
-                embed.add_field(name="Title", value=title, inline=False)
-
-                embed.set_footer(text=f"Author: {author}")
-
-                if len(text) > 1024 and text != "":
-
-                    text = f"Content is too large...\n{link}"
-
-                    embed.add_field(name="Content", value=text)
-
-                if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
-
-                    embed.set_image(url=url)
-
-                if url.startswith("https://imgur.com"):
-
-                    url = media["thumbnail_url"]
-
-                    embed.set_image(url=url)
-
                 if media:
 
-                    if media["type"] == "video":
+                    embed.add_field(
+                        name="Video Title",
+                        value="[{}]({})".format(post["data"]["title"], url),
+                    )
 
-                        embed.add_field(
-                            name="Video Title",
-                            value="[{}]({})".format(media["title"], url),
-                        )
+                    embed.add_field(
+                        name="Direct Video",
+                        value="[{}]({})".format("Video", media["reddit_video"]["scrubber_media_url"]),
+                    )
 
-                        embed.add_field(
-                            name="Channel",
-                            value="[{}]({})".format(
-                                media["author_name"], media["author_url"]
-                            ),
-                        )
+                    embed.add_field(
+                        name="Channel",
+                        value=post["data"]["author_fullname"],
+                    )
 
-                        embed.set_image(url=media["thumbnail_url"])
+                    embed.set_image(url=post["data"]["thumbnail"])
+                
+                else:
+
+                    embed.add_field(name="Title", value=title, inline=False)
+
+                    embed.set_footer(text=f"Author: {author}")
+
+                    if len(text) > 1024 and text != "":
+
+                        text = f"Content is too large...\n{link}"
+
+                        embed.add_field(name="Content", value=text)
+
+                    if url.endswith((".png", ".jpg", ".jpeg", ".gif")):
+
+                        embed.set_image(url=url)
+
+                    if url.startswith("https://imgur.com"):
+
+                        url = media["thumbnail_url"]
+
+                        embed.set_image(url=url)
 
                 if type(channel) == discord.DMChannel:
 
