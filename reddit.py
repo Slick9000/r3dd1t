@@ -135,7 +135,15 @@ async def on_message(msg):
                     
                     if media["type"]:
 
-                        direct_video = re.search(r'https.*\?',media["oembed"]["html"]).group(0)
+                        print(media)
+
+                        try:
+                            
+                            direct_video = re.search(r'https.*\?f',media["oembed"]["html"]).group(0)
+
+                        except:
+
+                            direct_video = re.search(r'https.*\?s',media["oembed"]["html"]).group(0)
 
                         embed.add_field(
                             name="Video Title",
