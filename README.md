@@ -10,7 +10,7 @@ while completely optional, it would be highly appreciated if you could donate if
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/irbee246)
 
 ## usage
-you can add the bot via it's [invite link](https://discordapp.com/channels/422293824770146304/422311739028275210/695417594420658177), or you can self host it yourself. please credit me if you want to self host it.
+you can add the bot via it's [invite link](https://discord.com/oauth2/authorize?client_id=459552609108230158&scope=bot&permissions=8), or you can self host it yourself. please credit me if you want to self host it.
 
 **r/** is the prefix for finding subreddits, 
 
